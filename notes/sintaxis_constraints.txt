@@ -1,0 +1,67 @@
+SINTAXIS CONSTRAINTS
+
+[ PK_TableName ] for a PRIMARY KEY constraint
+
+	Ex:    DNI char(9) CONSTRAINT PK_empleados PRIMARY KEY
+	Ex:    CONSTRAINT PK_asignacion PRIMARY KEY (DNIobrero, CodObra, Fecha)
+
+
+[ UQ_TableName_ColumnName ] for a UNIQUE constraint
+
+	Ex:    Nombre varchar2(40) CONSTRAINT UQ_empleados_nombre UNIQUE
+
+
+[ NN_TableName_ColumnName ] for a NOT NULL constraint
+
+	Ex:    Sueldo number(6,2) CONSTRAINT NN_empleados_sueldo NOT NULL
+
+
+[ FK_TableName_ReferencedTable ] for a FOREIGN KEY constraint
+
+	Ex:    DNIsubordinado char(9) CONSTRAINT FK_jefes_empleados REFERENCES empleados (DNI)
+	Ex:    CONSTRAINT FK_oficinistas_oficinas FOREIGN KEY (NomEdificio,NumOficina) REFERENCES oficinas (NomEdificio, NumOficina)
+
+
+
+AÑADIR/QUITAR CONSTRAINTS
+
+ALTER TABLE [Nombre_Tabla] ADD CONSTRAINT [Nombre_Constraint] [CONSTRAINT]([Nombre_Columna])	   <-- Resto de casos
+ALTER TABLE [Nombre_Tabla] ADD CONSTRAINT [Nombre_Constraint] CHECK ([Nombre_Columna] is NOT NULL) <-- Solo en caso de NOT NULL
+
+	Ex:    ALTER TABLE empleados ADD CONSTRAINT UQ_empleados_nombre UNIQUE(nombre);
+	Ex:    ALTER TABLE empleados ADD CONSTRAINT NN_empleados_sueldo CHECK (sueldo is NOT NULL);
+
+
+ALTER TABLE [Nombre_Tabla] DROP CONSTRAINT [Nombre_Constraint]
+
+	Ex:    ALTER TABLE empleados DROP CONSTRAINT PK_empleados;
+
+
+
+AÑADIR/QUITAR COLUMNAS
+
+ALTER TABLE [Nombre_Tabla] ADD [Nombre_Columna Tipo()] CONSTRAINT [Nombre_Constraint] [Constraint]
+
+	Ex:    ALTER TABLE empleados ADD sueldo number(6,2) CONSTRAINT NN_empleados_sueldo NOT NULL;
+
+
+ALTER TABLE [Nombre_Tabla] DROP COLUMN [Nombre_Columna]
+
+	Ex:    ALTER TABLE empleados DROP COLUMN nombre;
+
+
+
+CHECKS Y REGEX (Ejemplos)
+
+Número de aulas entre 100 y 400
+
+ALTER TABLE [Nombre_Tabla] ADD CONSTRAINT [Nombre_Constraint] CHECK ([Nombre_Columna] >= 100 AND [Nombre_Columna] < 400);
+
+	Ex: ALTER TABLE aulas ADD CONSTRAINT CK_aularango CHECK (naula >= 100 and naula < 400);
+
+
+Patrón para DNI
+
+ALTER TABLE [Nombre_Tabla] ADD CONSTRAINT [Nombre_Constraint] CHECK (REGEXP_LIKE([Nombre_Columna],'[[:digit:]]{8}[[:lower:]|[:upper:]]'));
+
+	Ex: ALTER TABLE alumnos ADD CONSTRAINT CK_aludni CHECK (REGEXP_LIKE(dni,'[[:digit:]]{8}[[:lower:]|[:upper:]]'));

@@ -1,0 +1,1 @@
+UPDATE clientes SET antiguedad_en_semanas = antiguedad_en_semanas + 1;

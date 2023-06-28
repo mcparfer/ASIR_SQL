@@ -1,0 +1,278 @@
+APARTADO 1
+
+/*Crear un procedimiento con un parámetro de entrada que sea el id de empleado
+y obtenga su salario de un empleado e imprima por pantalla "IT'S OVER 9000!!!!"
+si el sueldo de ese empleado es superior a 9000; Llamar al procedimiento desde
+un bloque anónimo*/
+
+create or replace procedure check_salario(v_id in employees.employee_id%type)
+as 
+    v_salario employees.salary%type;
+begin
+
+    select e.salary into v_salario
+    from employees e
+    where employee_id = v_id;
+    
+    if v_salario > 9000 then
+        dbms_output.put_line('ITS OVER 9000!!!');
+    end if;
+
+end check_salario;
+
+
+------
+
+begin
+    check_salario('100');
+end;
+
+====================================================================================
+
+APARTADO 2
+
+/*Con IF, crear un bloque PL/SQL que saque el trabajo en español de un trabajador:
+(CLERK -> RECEPCIONISTA SALESMAN -> VENDEDOR MANAGER -> MANAGER ANALYST -> ANALISTA
+PRESIDENT -> PRESIDENTE). Para otros trabajos, mostrar un else genérico.*/
+
+create or replace procedure check_puesto(v_id in employees.employee_id%type)
+as
+    v_puesto jobs.job_title%type;
+begin
+
+    if v_puesto like '%Clerk%' then
+        dbms_output.put_line('RECEPCIONISTA');
+    elsif v_puesto like '%Sales%' then
+        dbms_output.put_line('VENDEDOR');
+    elsif v_puesto like '%Manager%' then
+        dbms_output.put_line('MANAGER');
+    elsif v_puesto like '%Programmer%' then
+        dbms_output.put_line('PROGRAMADOR');
+    elsif v_puesto like '%President%' then
+        dbms_output.put_line('PRESIDENTE');
+    else
+        dbms_output.put_line('OTRO TRABAJO');
+    end if;
+    
+end check_puesto;
+
+------
+
+begin
+    check_puesto('120');
+end;
+
+===================================================================================
+
+APARTADO 3
+
+/*Escribe un  procedimiento que pasando un código de departamento, muestre
+los datos relativos al departamento, es decir, visualice su nombre, código
+y datos de localización (nombre de ciudad). Llamar al procedimiento
+desde un bloque anónimo.*/
+
+create or replace procedure check_departamento(v_department_id in departments.department_id%type)
+as
+    v_nom_dpt departments.department_name%type;
+    v_cod_dpt departments.department_id%type;
+    v_loc_dpt locations.city%type;
+begin
+
+    select d.department_name, d.department_id, l.city into v_nom_dpt, v_cod_dpt, v_loc_dpt
+    from departments d, locations l
+    where d.department_id = v_department_id 
+        and d.location_id = l.location_id;
+    
+    dbms_output.put_line('El departamento '||v_nom_dpt||', con código '||v_cod_dpt||', se encuentra en la ciudad de '||v_loc_dpt||'.');
+
+end;
+
+------
+
+begin
+    check_departamento('100');
+end;
+
+====================================================================================
+
+APARTADO 3?
+
+/*Desarrollar un procedimiento que visualice el apellido y la fecha de alta de todos
+los empleados ordenados por apellido. */
+
+create or replace procedure check_empleados
+as
+    cursor c_emp is select last_name, hire_date
+                    from employees
+                    order by last_name;
+    
+    v_emp c_emp%rowtype;
+begin
+    
+    for v_emp in c_emp loop
+        dbms_output.put_line('El empleado '||v_emp.last_name||' se dio de alta el '||v_emp.hire_date||'.');
+    end loop;
+    
+end check_empleados;
+
+-----
+
+begin
+    check_empleados;
+end;
+
+====================================================================================
+
+APARTADO 4
+
+/*Desarrollar un procedimiento que encuentre el primer empleado con un
+sueldo mayor de 2.000 €.*/
+
+create or replace procedure sueldo_mayorque
+as
+    v_emp_nombre employees.first_name%type;
+    v_emp_apellido employees.last_name%type;
+begin
+
+    select first_name, last_name into v_emp_nombre, v_emp_apellido
+    from employees
+    where salary > 2000
+        and rownum = 1;
+        
+    dbms_output.put_line('El primer empleado con un sueldo superior a 2000€ es '||v_emp_nombre||' '||v_emp_apellido||'.');
+    
+end sueldo_mayorque;
+
+-----
+
+begin
+    sueldo_mayorque;
+end;
+
+=====================================================================================
+
+APARTADO 5
+
+/*Realizar un procedimiento que visualice el número y apellido de un empleado, 
+así como la localidad de su departamento, ordenado por el nombre de la localidad.*/
+
+create or replace procedure check_localidad
+as
+
+cursor c_emp is select e.employee_id, e.last_name, l.city
+    from employees e, departments d, locations l
+    where e.department_id = d.department_id
+        and d.location_id = l.location_id
+    order by l.location_id;
+    
+v_emp c_emp%rowtype;
+
+begin
+    
+    for v_emp in c_emp loop
+        dbms_output.put_line('El empleado '||v_emp.last_name||', con código '||v_emp.employee_id||', vive en la localidad de '||v_emp.city||'.');
+    end loop;
+    
+end check_localidad;
+
+-----
+
+begin
+    check_localidad;
+end;
+
+=====================================================================================
+
+APARTADO 6
+
+/*Escribir un procedimiento que reciba una cadena y visualice el apellido y el
+número de empleado de todos los empleados cuyo apellido contenga la cadena
+especificada. Al finalizar visualizar el número de empleados mostrados.*/
+
+create or replace procedure check_cadena(v_cadena varchar2)
+as
+    cursor c_emp is select employee_id, last_name
+    from employees
+    where last_name like '%'||v_cadena||'%';
+    
+    v_emp c_emp%rowtype;
+    v_count number :=0;
+begin
+
+    for v_emp in c_emp loop
+        v_count := v_count + 1;
+        dbms_output.put_line('Apellido: '||v_emp.last_name||', Código: '||v_emp.employee_id);
+    end loop;
+    
+    dbms_output.put_line('Hay '||v_count||' empleados con esta cadena de caracteres.');
+
+    
+end check_cadena;
+
+-----
+
+begin
+    check_cadena('te');
+end;
+
+
+======================================================================================
+
+APARTADO 7
+
+/*Crear un procedimiento que muestre el nombre de todos los departamentos y el número de
+empleados que tiene (incluso si no tiene empleados).*/
+
+create or replace procedure check_departamento(v_department_id in departments.department_id%type)
+as
+    cursor c_dept is select d.department_name, count(e.employee_id) as count
+        from  departments d 
+        left join employees e on d.department_id = e.department_id
+        group by d.department_name;
+        
+    v_dept c_dept%rowtype;
+
+begin
+
+    for v_dept in c_dept loop
+        dbms_output.put_line('El departamento '||v_dept.department_name||' cuenta con '||v_dept.count||' empleado(s).');
+    end loop;
+
+end check_departamento;
+
+-----
+
+begin
+    check_departamento;
+end;
+
+=======================================================================================
+
+APARTADO 8
+
+/*Escribir un programa que visualice el apellido y el salario de los cinco empleados
+que tienen el salario más alto.*/
+
+create or replace procedure check_salarios
+as 
+    cursor c_emp is select last_name, salary
+        from employees
+        order by salary desc;
+        
+    v_emp c_emp%rowtype;
+begin
+
+    open c_emp;
+    loop
+        fetch c_emp into v_emp;
+        exit when c_emp%rowcount > 5;
+        dbms_output.put_line('El empleado '||v_emp.last_name||' gana '||v_emp.salary||' euros mensuales.');
+    end loop;
+    
+end check_salarios;
+
+-----
+
+begin
+    check_salarios;
+end;

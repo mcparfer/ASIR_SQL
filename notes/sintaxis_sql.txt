@@ -1,0 +1,52 @@
+select COLUMN from TABLE
+
+	Ex: select * 
+		from employees --> todas las filas de datos
+
+	    select all department_id 
+		from employees --> todos los departments_id aunque se repitan (el all es por defecto)
+
+	    select DISTINT department_id 
+		from employees --> todos los departments_id diferentes
+
+	    select last_name as "Apellido", salary 
+		from employees
+
+
+select COLUMN from TABLE where CONDITION and CONDITION and...
+
+	Ex: select last_name as "Apellido", salary 
+		from employees 
+		where salary > 400;
+
+	    select last_name as "Apellido", commision_pct 
+		from employees 
+		where commision_pct is not null;
+
+	    select last_name, salary, commission_pct, salary+salary*commision_pct "Salario Total" 
+		from employees 
+		where commision_pct is not null and REGEXP_LIKE(last_name,'^P');
+
+	    select last_name, salary, commission_pct, salary+salary*commision_pct "Salario Total" 
+		from employees 
+		where commision_pct is not null 
+		and last_name like 'P%';
+
+	    select last_name, salary, commission_pct, salary+salary*commision_pct "Salario Total"
+		from employees
+		where last_name in ("Bull","Cabrio","Geoni")
+		or salary > 3000;
+
+select COLUMNS from TABLE order by COLUMN asc / desc
+
+	Ex: select last_name as "Apellido", salary 
+		from employees 
+		where salary > 400;
+		order by last_name asc
+
+
+select COLUMNS from TABLE where COLUMN in (select COLUMNS from TABLE where COLUMN in ('DATA'))
+
+select first_name, last_name, department_id 
+    from employees 
+    where department_id in (select department_id from departments where department_name in ('Marketing'));
