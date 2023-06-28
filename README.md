@@ -1,4 +1,4 @@
-# Oracle SQL Projects Repository
+# SQL Projects Repository
 
 Welcome to my SQL projects repository! In this repository, you will find two small projects developed with Oracle SQL. Below, I will provide a brief description of each project.
 
