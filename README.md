@@ -1,6 +1,6 @@
 # SQL Projects Repository
 
-Welcome to my SQL projects repository! In this repository, you will find two small projects developed with Oracle SQL. Below, I will provide a brief description of each project.
+Welcome to my SQL projects repository! In this repository, you will find two small projects developed with Oracle and PostgreSQL. Below, I will provide a brief description of each project.
 
 ## Description
 
